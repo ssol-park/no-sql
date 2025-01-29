@@ -54,4 +54,12 @@ class NameTest {
 
         assertThat(ex.getMessage()).isEqualTo(MessageConstant.NOT_FOUND);
     }
+
+    @ParameterizedTest
+    @ValueSource(strings = "John")
+    void testGetKorName(String engName) {
+        String storedKorName = nameService.getKorName(engName);
+
+        assertThat(storedKorName).isEmpty();
+    }
 }
