@@ -1,4 +1,13 @@
 services:
+  mongodb:
+    image: mongo:6.0
+    container_name: mongodb-container
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    # volumes:
+    #   - mongo_data:/data/db
+
   redis:
     image: redis:7
     container_name: redis-container
@@ -7,5 +16,4 @@ services:
       - "6379:6379"
     command: redis-server --appendonly yes --save 900 1 --save 300 10 --save 60 10000
     # volumes:
-    #   - redis_data:/data  # 데이터 영속성을 위한 볼륨 (테스트 환경에서는 주석 처리)
-
+    #   - redis_data:/data
