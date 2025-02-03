@@ -1,7 +1,7 @@
 package com.psr.nosql.entity;
 
-import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 import java.time.Instant;
 
 @Getter
-@Builder
+@NoArgsConstructor
 @Document(collection = "pages")
 public class Page {
     @MongoId
