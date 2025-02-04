@@ -10,7 +10,7 @@ import org.springframework.data.redis.core.RedisHash;
 @NoArgsConstructor
 @AllArgsConstructor
 @RedisHash(value = "name", timeToLive = 10)
-public class NameEntity {
+public class Name {
     @Id
     private String engName;
     private String korName;
