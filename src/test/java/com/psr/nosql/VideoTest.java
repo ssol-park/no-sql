@@ -2,20 +2,23 @@ package com.psr.nosql;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.psr.nosql.service.VideoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisCallback;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ScanOptions;
+import org.springframework.data.redis.core.*;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 class VideoTest {
@@ -26,13 +29,15 @@ class VideoTest {
 
     @Autowired
     private RedisTemplate redisTemplate;
+    @Autowired
+    private VideoService videoService;
 
     private ObjectMapper objectMapper = new ObjectMapper();
-
-    private HashOperations<String, String, String> hashOperations;
+    private ValueOperations<String, String> valueOps;
 
     @BeforeEach
     void setUp() throws IOException {
+        valueOps = redisTemplate.opsForValue();
 
         InputStream inputStream = new ClassPathResource(VIDEO_DATA_PATH).getInputStream();
         List<Map<String, String>> videoSamples = objectMapper.readValue(inputStream, new TypeReference<>() {});
@@ -68,4 +73,21 @@ class VideoTest {
     }
 
 
+    @ParameterizedTest
+    @ValueSource(strings = {"vid001", "vid002", "vid003"})
+    void testIncrementViewCount(String videoId) {
+        String key = VIDEO_VIEW_COUNT_PREFIX + videoId;
+
+        String currentValue = valueOps.get(key);
+        long expectedValue = (currentValue == null) ? 1 : Long.parseLong(currentValue) + 1;
+
+        long updateCnt = videoService.incrementViewCount(key);
+
+        assertThat(updateCnt).isEqualTo(expectedValue);
+
+        updateCnt = videoService.incrementViewCount(key);
+        expectedValue += 1;
+
+        assertThat(updateCnt).isEqualTo(expectedValue);
+    }
 }
