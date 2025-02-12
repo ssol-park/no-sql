@@ -51,14 +51,9 @@ class VideoTest {
         redisTemplate.executePipelined((RedisCallback<Object>) connection -> {
             videoSamples.forEach(video -> {
                 String videoId = video.get("videoId");
-
                 String key = VIDEO_KEY_PREFIX + videoId;
 
-                connection.hMSet(key.getBytes(), video.entrySet().stream()
-                        .collect(java.util.stream.Collectors.toMap(
-                                e -> e.getKey().getBytes(),
-                                e -> e.getValue().getBytes()
-                        )));
+                redisTemplate.opsForHash().putAll(key, video);
             });
 
             return null;
@@ -66,10 +61,9 @@ class VideoTest {
     }
 
     private long getAllVideos() {
-        return redisTemplate.getConnectionFactory().getConnection()
-                .scan(ScanOptions.scanOptions().match(VIDEO_KEY_PREFIX + "*").count(20).build())
-                .spliterator()
-                .getExactSizeIfKnown();
+        return redisTemplate.opsForHash()
+                .scan(VIDEO_KEY_PREFIX + "*", ScanOptions.scanOptions().count(20).build())
+                .stream().count();
     }
 
 
