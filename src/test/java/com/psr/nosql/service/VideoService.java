@@ -18,4 +18,8 @@ public class VideoService {
     public long incrementViewCount(String key) {
         return valueOps.increment(key);
     }
+
+    public String getUrl(String key) {
+        return (String) redisTemplate.opsForHash().get(key, "url");
+    }
 }

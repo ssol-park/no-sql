@@ -4,9 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.psr.nosql.service.VideoService;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -83,5 +81,15 @@ class VideoTest {
         expectedValue += 1;
 
         assertThat(updateCnt).isEqualTo(expectedValue);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"vid001", "vid002", "vid003"})
+    void testGetUrl(String videoId) {
+        String key = VIDEO_KEY_PREFIX + videoId;
+
+        String url = videoService.getUrl(key);
+
+        assertThat(url).isNotEmpty();
     }
 }
