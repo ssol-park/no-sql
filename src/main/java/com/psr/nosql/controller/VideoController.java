@@ -14,7 +14,7 @@ public class VideoController {
      * @param videoId 조회수를 증가시킬 영상의 ID
      * @return 조회수와 영상 URL을 포함한 응답 데이터
      */
-    @PostMapping("/{videoId}/view")
+    @PostMapping("/{videoId}")
     public ResponseEntity<ResponseDto> incrementViewsAndGetUrl(@PathVariable String videoId) {
         return null;
     }

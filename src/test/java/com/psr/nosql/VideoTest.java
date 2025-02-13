@@ -2,9 +2,11 @@ package com.psr.nosql;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.psr.nosql.dto.VideoUrlDto;
 import com.psr.nosql.service.VideoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -91,5 +93,23 @@ class VideoTest {
         String url = videoService.getUrl(key);
 
         assertThat(url).isNotEmpty();
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "vid001, https://video.example.com/watch/vid001",
+            "vid002, https://video.example.com/watch/vid002",
+            "vid003, https://video.example.com/watch/vid003"
+    })
+    void testIncrementViewAndReturnUrl(String videoId, String expectedUrl) {
+        String countKey = VIDEO_VIEW_COUNT_PREFIX + videoId;
+        String currentValue = valueOps.get(countKey);
+        long expectedValue = (currentValue == null) ? 1 : Long.parseLong(currentValue) + 1;
+
+        VideoUrlDto urlDto = videoService.incrementViewAndReturnUrl(videoId);
+
+        String incrementCnt = valueOps.get(countKey);
+        assertThat(Long.parseLong(incrementCnt)).isEqualTo(expectedValue);
+        assertThat(urlDto.getUrl()).isEqualTo(expectedUrl);
     }
 }
