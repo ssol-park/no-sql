@@ -36,6 +36,6 @@ class RateLimiterTest {
             assertThat(rateLimiter.isAllowed(userId)).isTrue();
         }
 
-        assertThat(rateLimiter.isAllowed(userId)).isTrue();
+        assertThat(rateLimiter.isAllowed(userId)).isFalse();
     }
 }

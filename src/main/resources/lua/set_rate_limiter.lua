@@ -1,10 +1,9 @@
 local key = KEYS[1]
 local now = tonumber(ARGV[1])
-local window = tonumber(ARGV[2])
+local window = tonumber(ARGV[2]) * 1000
 local limit = tonumber(ARGV[3])
 local ttl = tonumber(ARGV[4])
 
--- 1. 1분 이전의 요청 제거
 redis.call('ZREMRANGEBYSCORE', key, 0, now - window)
 
 -- 2. 현재 요청 개수 확인
