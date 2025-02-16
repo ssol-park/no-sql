@@ -45,7 +45,7 @@ public class PageTest {
         boolean existsData = pageRepository.exists(Example.of(new Page()));
 
         if (!existsData) {
-            var resource = new ClassPathResource("/static/url.json");
+            var resource = new ClassPathResource("/sample/url.json");
             List<Page> pages = objectMapper.readValue(resource.getInputStream(), new TypeReference<>() {});
 
             pageRepository.saveAll(pages);
