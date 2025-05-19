@@ -15,7 +15,4 @@ public class UrlRequestDto {
     @NotBlank
     @Schema(description = "단축하고자 하는 원본 URL", example = "https://example.com")
     private String originalUrl;
-
-    @Schema(description = "단축 URL의 TTL (초 단위, 옵션)", example = "86400")
-    private long ttl;
 }
