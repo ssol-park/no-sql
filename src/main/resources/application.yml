@@ -3,12 +3,16 @@ spring:
     redis:
       host: localhost
       port: 6379
-      password:
-      timeout: 6000ms
+      username: srpark
+      password: admin
+      lettuce:
+        pool:
+          max-active: 10
+          max-idle: 10
+          min-idle: 2
 
     mongodb:
-      uri: mongodb://localhost:27017/local  # MongoDB URI, mydatabase는 실제 사용하려는 데이터베이스 이름
-      username:
-      password:
-      authentication-database: admin  # 인증 DB (기본 값은 admin)
-      database: local
+      uri: mongodb://srpark:admin@localhost:27017/url?authSource=url&minPoolSize=10&maxPoolSize=50&maxIdleTimeMS=30000
+
+base:
+  url: http://localhost:8080
