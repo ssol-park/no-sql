@@ -3,8 +3,10 @@ package com.psr.nosql.controller;
 import com.psr.nosql.dto.ApiResponse;
 import com.psr.nosql.dto.ShortUrlResponse;
 import com.psr.nosql.dto.UrlRequestDto;
+import com.psr.nosql.service.UrlService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -12,8 +14,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/url")
+@RequiredArgsConstructor
 @Tag(name = "URL 단축 API", description = "단축 URL 생성 및 조회 관련 API")
 public class UrlController {
+
+    private final UrlService urlService;
 
     /**
      * 단축 URL을 생성
@@ -24,9 +29,7 @@ public class UrlController {
     @Operation(summary = "단축 URL 생성", description = "원본 URL을 단축 코드로 변환한다.")
     @PostMapping("/shorten")
     public ApiResponse<ShortUrlResponse> shortenUrl(@RequestBody UrlRequestDto request) {
-        // TODO: 서비스 로직 호출
-        ShortUrlResponse response = null;
-        return ApiResponse.success(response);
+        return ApiResponse.success(urlService.createShortUrl(request));
     }
 
     /**
