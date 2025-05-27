@@ -17,6 +17,19 @@ public class Base62Util {
         return encoded.reverse().toString();
     }
 
+    public static String encode(byte[] input) {
+        StringBuilder result = new StringBuilder();
+        java.math.BigInteger value = new java.math.BigInteger(1, input);
+
+        while (value.compareTo(java.math.BigInteger.ZERO) > 0) {
+            int remainder = value.mod(java.math.BigInteger.valueOf(62)).intValue();
+            result.append(ALPHABET.charAt(remainder));
+            value = value.divide(java.math.BigInteger.valueOf(62));
+        }
+
+        return result.reverse().toString();
+    }
+
     public static long decode(String encoded) {
         long result = 0;
         for (int i = 0; i < encoded.length(); i++) {
